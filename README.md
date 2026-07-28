@@ -23,8 +23,8 @@ You and Casey are Connected 💛 — you've sent 12, they've sent 11. Miss U is 
 | Homebrew | `brew install glimpsed-io/tap/miss-u-more` |
 | Scoop | `scoop bucket add glimpsed-io https://github.com/glimpsed-io/scoop-bucket && scoop install miss-u-more` |
 | Docker | `docker run --rm -e MISSU_TOKEN ghcr.io/glimpsed-io/miss-u-more` |
-| Go | `go install github.com/glimpsed-io/MissU-Connectors/cmd/miss-u-more@latest` |
-| Binary | grab an archive from [Releases](https://github.com/glimpsed-io/MissU-Connectors/releases) |
+| Go | `go install github.com/glimpsed-io/MissUMore-Connectors/cmd/miss-u-more@latest` |
+| Binary | grab an archive from [Releases](https://github.com/glimpsed-io/MissUMore-Connectors/releases) |
 
 > **Status:** the code is complete and tested, but nothing is published yet — see
 > [Publishing](#publishing). Until then, build from source:

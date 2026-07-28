@@ -89,7 +89,7 @@ dockers_v2:
       - "{{ .Version }}"
       - "{{ if not .Prerelease }}latest{{ end }}"
     annotations:
-      org.opencontainers.image.source: https://github.com/glimpsed-io/MissU-Connectors
+      org.opencontainers.image.source: https://github.com/glimpsed-io/MissUMore-Connectors
       org.opencontainers.image.version: "{{ .Version }}"
       org.opencontainers.image.description: The Miss U More command line.
 
