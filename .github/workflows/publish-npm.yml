@@ -1,0 +1,57 @@
+# Publishes npm to npm as `missu`.
+#
+# Uses npm trusted publishing (OIDC): no NPM_TOKEN secret to store, leak or
+# rotate. The trust relationship is configured once on npmjs.com against this
+# repository + workflow file — see the repository README.
+#
+# workflow_dispatch only: publishing is always a decision, never a side effect
+# of a push.
+name: publish-npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Pack and test, but do not publish"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write # required for trusted publishing
+
+defaults:
+  run:
+    working-directory: npm
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs a recent npm; the runner's bundled one may lag.
+      - name: Use an npm that supports OIDC
+        run: npm install -g npm@latest
+
+      - name: Test
+        run: node --test
+
+      - name: Pack and show exactly what would ship
+        run: |
+          npm pack --dry-run
+          npm pack
+
+      - name: Publish
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --access public
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: missu-npm-tarball
+          path: npm/*.tgz

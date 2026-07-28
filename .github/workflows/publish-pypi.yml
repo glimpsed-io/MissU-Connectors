@@ -1,0 +1,73 @@
+# Publishes python to PyPI as `missu`.
+#
+# Uses PyPI trusted publishing (OIDC): no API token to store, leak or rotate.
+# The trust relationship is configured once on pypi.org against this repository
+# + workflow file — see the repository README.
+#
+# workflow_dispatch only: publishing is always a decision, never a side effect
+# of a push.
+name: publish-pypi
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to publish"
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+      dry_run:
+        description: "Build and test, but do not publish"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write # required for trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # The environment gates who/what may publish; create it in repo settings
+    # and add the trusted publisher on PyPI with the same name.
+    environment: ${{ inputs.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test
+        working-directory: python
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+
+      - name: Build sdist and wheel
+        working-directory: python
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      - name: Check metadata renders on PyPI
+        working-directory: python
+        run: |
+          python -m pip install --upgrade twine
+          python -m twine check dist/*
+
+      - name: Publish to TestPyPI
+        if: ${{ !inputs.dry_run && inputs.target == 'testpypi' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish to PyPI
+        if: ${{ !inputs.dry_run && inputs.target == 'pypi' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: missu-pypi-dist
+          path: python/dist/*

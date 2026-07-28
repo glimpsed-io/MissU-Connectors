@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "missu"
+version = "0.1.0"
+description = "Let one person know you miss them, from the command line."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Glimpsed" }]
+keywords = ["missu", "cli", "miss-u-more"]
+classifiers = [
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Programming Language :: Python :: 3",
+  "Topic :: Communications",
+]
+# Deliberately no dependencies: the whole client is two urllib calls.
+dependencies = []
+
+[project.urls]
+Homepage = "https://missu.fyi"
+
+[project.scripts]
+missu = "missu.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/missu"]

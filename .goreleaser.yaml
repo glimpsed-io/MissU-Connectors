@@ -1,0 +1,97 @@
+# GoReleaser builds the cross-platform `missu` CLI and everything downstream of
+# it: archives + checksums on a GitHub Release, the Homebrew cask, the Scoop
+# manifest, and multi-arch container images.
+#
+# Nothing here runs on push. Releases are cut by the workflow_dispatch job in
+# .github/workflows/publish-cli.yml, so tagging never surprises anyone with a
+# publish.
+#
+# Dry run locally, no credentials needed, nothing published:
+#   goreleaser release --snapshot --clean
+version: 2
+
+project_name: missu
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: missu
+    main: ./cmd/missu
+    binary: missu
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: missu
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-dev"
+
+changelog:
+  use: github
+
+# Homebrew: a Cask (Formulas for pre-compiled binaries are deprecated upstream)
+# in a public tap repo we own. Needs HOMEBREW_TAP_TOKEN — see README.md.
+homebrew_casks:
+  - name: missu
+    binaries: [missu]
+    repository:
+      owner: glimpsed-io
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    homepage: https://missu.fyi
+    description: Let one person know you miss them, from the command line.
+    # The binary is not signed or notarized, so macOS would otherwise quarantine
+    # it on first run.
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/missu"]
+          end
+
+# Scoop: same idea for Windows, a public bucket repo we own.
+scoops:
+  - name: missu
+    repository:
+      owner: glimpsed-io
+      name: scoop-bucket
+      token: "{{ .Env.SCOOP_BUCKET_TOKEN }}"
+    homepage: https://missu.fyi
+    description: Let one person know you miss them, from the command line.
+
+# GHCR: a distroless image whose entrypoint is the CLI, so `docker run` is a
+# supported way to tap. Set the package to public once, in GitHub's UI.
+dockers_v2:
+  - images:
+      - ghcr.io/glimpsed-io/missu
+    dockerfile: Dockerfile
+    platforms: [linux/amd64, linux/arm64]
+    tags:
+      - "{{ .Version }}"
+      - "{{ if not .Prerelease }}latest{{ end }}"
+    annotations:
+      org.opencontainers.image.source: https://github.com/glimpsed-io/MissU-Connectors
+      org.opencontainers.image.version: "{{ .Version }}"
+      org.opencontainers.image.description: The Miss U More command line.
+
+release:
+  prerelease: auto
