@@ -76,7 +76,7 @@ jobs:
       - name: Keep the built artifacts for inspection
         uses: actions/upload-artifact@v4
         with:
-          name: missu-cli-dist
+          name: miss-u-more-cli-dist
           path: |
             dist/*.tar.gz
             dist/*.zip

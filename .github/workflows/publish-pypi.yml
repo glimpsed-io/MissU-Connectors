@@ -69,5 +69,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: missu-pypi-dist
+          name: miss-u-more-pypi-dist
           path: python/dist/*

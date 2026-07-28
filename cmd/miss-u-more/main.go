@@ -1,11 +1,11 @@
-// Command missu is the Miss U More command line: let one person know you miss
+// Command miss-u-more is the Miss U More command line: let one person know you miss
 // them, without leaving the terminal.
 //
-//	missu              press the button
-//	missu status       print the score, connection and cooldown
-//	missu login        store a personal API token for later runs
-//	missu logout       forget the stored token
-//	missu version      print the build version
+//	miss-u-more              press the button
+//	miss-u-more status       print the score, connection and cooldown
+//	miss-u-more login        store a personal API token for later runs
+//	miss-u-more logout       forget the stored token
+//	miss-u-more version      print the build version
 //
 // It deliberately has no dependencies and no generated code. The whole public
 // API is two endpoints behind a bearer header —
@@ -20,7 +20,7 @@
 // it.
 //
 // Auth is a personal API token from Settings → Assistants (MCP) on missu.fyi,
-// read from --token, then MISSU_TOKEN, then ~/.config/missu/token (0600).
+// read from --token, then MISSU_TOKEN, then ~/.config/miss-u-more/token (0600).
 package main
 
 import (
@@ -52,14 +52,14 @@ const (
 	source = "cli"
 )
 
-const usage = `missu — let one person know you miss them.
+const usage = `miss-u-more — let one person know you miss them.
 
 Usage:
-  missu                press the button
-  missu status         the score, whether you're Connected, and any cooldown
-  missu login          store a personal API token for later runs
-  missu logout         forget the stored token
-  missu version        print the version
+  miss-u-more                press the button
+  miss-u-more status         the score, whether you're Connected, and any cooldown
+  miss-u-more login          store a personal API token for later runs
+  miss-u-more logout         forget the stored token
+  miss-u-more version        print the version
 
 Flags:
   --token <token>      use this token instead of MISSU_TOKEN / the stored one
@@ -76,7 +76,7 @@ func main() {
 		asJSON   bool
 		showHelp bool
 	)
-	fs := flag.NewFlagSet("missu", flag.ContinueOnError)
+	fs := flag.NewFlagSet("miss-u-more", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	fs.Usage = func() { fmt.Fprint(os.Stderr, usage) }
 	fs.StringVar(&token, "token", "", "personal API token")
@@ -85,8 +85,8 @@ func main() {
 	fs.BoolVar(&showHelp, "help", false, "show usage")
 	fs.BoolVar(&showHelp, "h", false, "show usage")
 
-	// Accept the subcommand before or after flags: `missu --json status` and
-	// `missu status --json` should both work, because both get typed.
+	// Accept the subcommand before or after flags: `miss-u-more --json status` and
+	// `miss-u-more status --json` should both work, because both get typed.
 	var cmd string
 	var flagArgs []string
 	for _, a := range os.Args[1:] {
@@ -108,7 +108,7 @@ func main() {
 	defer stop()
 
 	if err := run(ctx, cmd, token, base, asJSON); err != nil {
-		fmt.Fprintln(os.Stderr, "missu: "+err.Error())
+		fmt.Fprintln(os.Stderr, "miss-u-more: "+err.Error())
 		os.Exit(1)
 	}
 }
@@ -125,7 +125,7 @@ func run(ctx context.Context, cmd, tokenFlag, baseFlag string, asJSON bool) erro
 
 	switch cmd {
 	case "version":
-		fmt.Printf("missu %s\n", version)
+		fmt.Printf("miss-u-more %s\n", version)
 		return nil
 
 	case "logout":
@@ -172,7 +172,7 @@ func run(ctx context.Context, cmd, tokenFlag, baseFlag string, asJSON bool) erro
 		return nil
 
 	default:
-		return fmt.Errorf("unknown command %q — run `missu --help`", cmd)
+		return fmt.Errorf("unknown command %q — run `miss-u-more --help`", cmd)
 	}
 }
 
@@ -316,7 +316,7 @@ func login(ctx context.Context, base string) error {
 }
 
 // resolveToken finds the bearer credential: explicit flag, then environment,
-// then the file written by `missu login`.
+// then the file written by `miss-u-more login`.
 func resolveToken(flagValue string) (string, error) {
 	if flagValue != "" {
 		return flagValue, nil
@@ -333,18 +333,18 @@ func resolveToken(flagValue string) (string, error) {
 			return token, nil
 		}
 	}
-	return "", errors.New("no token — run `missu login`, or set MISSU_TOKEN")
+	return "", errors.New("no token — run `miss-u-more login`, or set MISSU_TOKEN")
 }
 
-// tokenPath is ~/.config/missu/token, honouring XDG_CONFIG_HOME. The npm and
-// Python clients in this repository use the same file, so `missu login` once
+// tokenPath is ~/.config/miss-u-more/token, honouring XDG_CONFIG_HOME. The npm and
+// Python clients in this repository use the same file, so `miss-u-more login` once
 // works whichever one you reach for.
 func tokenPath() (string, error) {
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(dir, "missu", "token"), nil
+	return filepath.Join(dir, "miss-u-more", "token"), nil
 }
 
 // printJSON pretty-prints the raw payload, for scripts that would rather parse

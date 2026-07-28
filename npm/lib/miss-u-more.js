@@ -1,11 +1,11 @@
-// missu — the Miss U More command line, as an npm package.
+// miss-u-more — the Miss U More command line, as an npm package.
 //
-// This is a native reimplementation of cmd/missu-cli rather than a downloader
+// This is a native reimplementation of cmd/miss-u-more (the Go client) rather than a downloader
 // for it: the API is two endpoints behind a bearer header, so the whole client
 // is smaller than the code needed to fetch, verify and cache a binary — and it
 // works on every platform Node runs on, with no postinstall script.
 //
-// Keep behaviour in step with cmd/missu-cli and clients/cli-python: same
+// Keep behaviour in step with cmd/miss-u-more and the Python client: same
 // commands, same env vars, same token file.
 
 import { readFile, writeFile, mkdir, unlink } from "node:fs/promises";
@@ -16,14 +16,14 @@ import { join, dirname } from "node:path";
 const DEFAULT_BASE = "https://missu.fyi";
 const SOURCE = "cli"; // notification reads "… via the command line"
 
-const USAGE = `missu — let one person know you miss them.
+const USAGE = `miss-u-more — let one person know you miss them.
 
 Usage:
-  missu                press the button
-  missu status         the score, whether you're Connected, and any cooldown
-  missu login          store a personal API token for later runs
-  missu logout         forget the stored token
-  missu version        print the version
+  miss-u-more                press the button
+  miss-u-more status         the score, whether you're Connected, and any cooldown
+  miss-u-more login          store a personal API token for later runs
+  miss-u-more logout         forget the stored token
+  miss-u-more version        print the version
 
 Flags:
   --token <token>      use this token instead of MISSU_TOKEN / the stored one
@@ -33,10 +33,10 @@ Flags:
 Mint a token at https://missu.fyi -> Settings -> Assistants (MCP).
 `;
 
-// tokenPath mirrors the Go CLI: ~/.config/missu/token, honouring XDG_CONFIG_HOME.
+// tokenPath mirrors the Go CLI: ~/.config/miss-u-more/token, honouring XDG_CONFIG_HOME.
 function tokenPath() {
   const base = process.env.XDG_CONFIG_HOME || join(homedir(), ".config");
-  return join(base, "missu", "token");
+  return join(base, "miss-u-more", "token");
 }
 
 async function resolveToken(flagToken) {
@@ -49,7 +49,7 @@ async function resolveToken(flagToken) {
   } catch {
     // no stored token; fall through to the error below
   }
-  throw new Error("no token — run `missu login`, or set MISSU_TOKEN");
+  throw new Error("no token — run `miss-u-more login`, or set MISSU_TOKEN");
 }
 
 // request issues one authenticated call and turns any non-2xx into the API's
@@ -132,7 +132,7 @@ async function main() {
     else if (a === "--json") flags.json = true;
     else if (a === "--help" || a === "-h") flags.help = true;
     else if (!a.startsWith("-") && !cmd) cmd = a;
-    else throw new Error(`unknown flag ${a} — run \`missu --help\``);
+    else throw new Error(`unknown flag ${a} — run \`miss-u-more --help\``);
   }
 
   if (flags.help || cmd === "help") {
@@ -147,7 +147,7 @@ async function main() {
       const pkg = JSON.parse(
         await readFile(new URL("../package.json", import.meta.url), "utf8"),
       );
-      console.log(`missu ${pkg.version}`);
+      console.log(`miss-u-more ${pkg.version}`);
       return;
     }
     case "logout":
@@ -165,11 +165,11 @@ async function main() {
       return;
     }
     default:
-      throw new Error(`unknown command "${cmd}" — run \`missu --help\``);
+      throw new Error(`unknown command "${cmd}" — run \`miss-u-more --help\``);
   }
 }
 
-// The executable is bin/missu.js, which just calls main(). Keeping the entry
+// The executable is bin/miss-u-more.js, which just calls main(). Keeping the entry
 // point separate from the library means no "was I invoked directly?" guard —
 // which silently no-ops when the package is installed as a symlink (npm link,
 // pnpm, a `file:` dependency).

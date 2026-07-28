@@ -8,7 +8,7 @@ The server lives in a separate, private repository. Everything here talks to the
 public API and nothing else, which is why it can be public.
 
 ```console
-$ missu
+$ miss-u-more
 Miss U sent 💛
 
 You and Casey are Connected 💛 — you've sent 12, they've sent 11. Miss U is ready (4 left this minute).
@@ -18,32 +18,32 @@ You and Casey are Connected 💛 — you've sent 12, they've sent 11. Miss U is 
 
 | | |
 | --- | --- |
-| npm | `npx missu` (or `npm i -g missu`) |
-| PyPI | `uvx missu` (or `pipx install missu`) |
-| Homebrew | `brew install glimpsed-io/tap/missu` |
-| Scoop | `scoop bucket add glimpsed-io https://github.com/glimpsed-io/scoop-bucket && scoop install missu` |
-| Docker | `docker run --rm -e MISSU_TOKEN ghcr.io/glimpsed-io/missu` |
-| Go | `go install github.com/glimpsed-io/MissU-Connectors/cmd/missu@latest` |
+| npm | `npx miss-u-more` (or `npm i -g miss-u-more`) |
+| PyPI | `uvx miss-u-more` (or `pipx install miss-u-more`) |
+| Homebrew | `brew install glimpsed-io/tap/miss-u-more` |
+| Scoop | `scoop bucket add glimpsed-io https://github.com/glimpsed-io/scoop-bucket && scoop install miss-u-more` |
+| Docker | `docker run --rm -e MISSU_TOKEN ghcr.io/glimpsed-io/miss-u-more` |
+| Go | `go install github.com/glimpsed-io/MissU-Connectors/cmd/miss-u-more@latest` |
 | Binary | grab an archive from [Releases](https://github.com/glimpsed-io/MissU-Connectors/releases) |
 
 > **Status:** the code is complete and tested, but nothing is published yet — see
 > [Publishing](#publishing). Until then, build from source:
-> `go build ./cmd/missu`.
+> `go build ./cmd/miss-u-more`.
 
 ## Use
 
 ```sh
-missu            # press the button
-missu status     # the score, whether you're Connected, and any cooldown
-missu login      # store a token so later runs need no environment variable
-missu logout     # forget the stored token
-missu --json     # raw JSON, for scripts
+miss-u-more            # press the button
+miss-u-more status     # the score, whether you're Connected, and any cooldown
+miss-u-more login      # store a token so later runs need no environment variable
+miss-u-more logout     # forget the stored token
+miss-u-more --json     # raw JSON, for scripts
 ```
 
 ## Auth
 
 Mint a personal API token at **missu.fyi → Settings → Assistants (MCP)**, then
-either run `missu login` or set `MISSU_TOKEN`.
+either run `miss-u-more login` or set `MISSU_TOKEN`.
 
 The token acts as you for exactly two endpoints — read your status, and press the
 button — and nothing else. Revoke it any time from the same settings page.
@@ -53,13 +53,13 @@ button — and nothing else. Revoke it any time from the same settings page.
 | `MISSU_TOKEN` | the personal API token |
 | `MISSU_BASE_URL` | the server to talk to (default `https://missu.fyi`) |
 
-All three clients read and write the same `~/.config/missu/token` (mode 0600), so
-`missu login` once works whichever one you reach for.
+All three clients read and write the same `~/.config/miss-u-more/token` (mode 0600), so
+`miss-u-more login` once works whichever one you reach for.
 
 ## Layout
 
 ```
-cmd/missu/     the Go CLI — the binary behind Homebrew, Scoop, Docker, go install
+cmd/miss-u-more/     the Go CLI — the binary behind Homebrew, Scoop, Docker, go install
 npm/           the npm package (native Node, zero dependencies)
 python/        the PyPI package (native Python, stdlib only)
 ```
@@ -109,8 +109,8 @@ pushing code never publishes anything. Before the first real run:
 - **Licence.** There is no `LICENSE` file yet, and these are public artifacts. Pick
   one, add it, then set `license` in `npm/package.json`, `python/pyproject.toml`,
   and under `homebrew_casks`/`scoops` in `.goreleaser.yaml`.
-- **The name.** Confirm `missu` is free on npm and PyPI. If not, the fallbacks are
-  `@glimpsed/missu` and `missu-cli` — a one-line change in each manifest.
+- **The name.** Confirm `miss-u-more` is free on npm and PyPI. If not, the fallbacks are
+  `@glimpsed/miss-u-more` on npm and a suffixed variant on PyPI — a one-line change in each manifest.
 
 ### npm — `publish-npm.yml`
 

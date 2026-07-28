@@ -1,4 +1,4 @@
-"""Command-line entry point: `missu`, `missu status`, `missu login`, ..."""
+"""Command-line entry point: `miss-u-more`, `miss-u-more status`, `miss-u-more login`, ..."""
 
 from __future__ import annotations
 
@@ -18,14 +18,14 @@ from . import (
     token_path,
 )
 
-USAGE = """missu — let one person know you miss them.
+USAGE = """miss-u-more — let one person know you miss them.
 
 Usage:
-  missu                press the button
-  missu status         the score, whether you're Connected, and any cooldown
-  missu login          store a personal API token for later runs
-  missu logout         forget the stored token
-  missu version        print the version
+  miss-u-more                press the button
+  miss-u-more status         the score, whether you're Connected, and any cooldown
+  miss-u-more login          store a personal API token for later runs
+  miss-u-more logout         forget the stored token
+  miss-u-more version        print the version
 
 Flags:
   --token <token>      use this token instead of MISSU_TOKEN / the stored one
@@ -79,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.command == "version":
-            print(f"missu {__version__}")
+            print(f"miss-u-more {__version__}")
             return 0
 
         if args.command == "logout":
@@ -103,10 +103,10 @@ def main(argv: list[str] | None = None) -> int:
                 print(render_status(status, tapped))
             return 0
 
-        raise MissUError(f'unknown command "{args.command}" — run `missu --help`')
+        raise MissUError(f'unknown command "{args.command}" — run `miss-u-more --help`')
 
     except MissUError as e:
-        print(f"missu: {e}", file=sys.stderr)
+        print(f"miss-u-more: {e}", file=sys.stderr)
         return 1
     except KeyboardInterrupt:
         return 130

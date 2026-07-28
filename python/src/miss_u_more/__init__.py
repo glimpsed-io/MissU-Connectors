@@ -1,11 +1,11 @@
-"""missu — the Miss U More command line, as a PyPI package.
+"""miss-u-more — the Miss U More command line, as a PyPI package.
 
-A native reimplementation of cmd/missu-cli rather than a downloader for it: the
+A native reimplementation of cmd/miss-u-more (the Go client) rather than a downloader for it: the
 API is two endpoints behind a bearer header, so the whole client is smaller than
 the code needed to fetch, verify and cache a binary — and it works wherever
 Python does, with no build step and no dependencies.
 
-Keep behaviour in step with cmd/missu-cli and clients/cli-npm: same commands,
+Keep behaviour in step with cmd/miss-u-more and the npm client: same commands,
 same environment variables, same token file.
 """
 
@@ -28,9 +28,9 @@ class MissUError(Exception):
 
 
 def token_path() -> Path:
-    """Mirror the Go CLI: ~/.config/missu/token, honouring XDG_CONFIG_HOME."""
+    """Mirror the Go CLI: ~/.config/miss-u-more/token, honouring XDG_CONFIG_HOME."""
     base = os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config")
-    return Path(base) / "missu" / "token"
+    return Path(base) / "miss-u-more" / "token"
 
 
 def resolve_token(flag_token: str = "") -> str:
@@ -46,7 +46,7 @@ def resolve_token(flag_token: str = "") -> str:
         stored = ""
     if stored:
         return stored
-    raise MissUError("no token — run `missu login`, or set MISSU_TOKEN")
+    raise MissUError("no token — run `miss-u-more login`, or set MISSU_TOKEN")
 
 
 def request(base: str, token: str, method: str, path: str, body: dict | None = None) -> dict | None:

@@ -7,7 +7,7 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from missu import MissUError, render_status, request
+from miss_u_more import MissUError, render_status, request
 
 
 class RenderStatusTest(unittest.TestCase):

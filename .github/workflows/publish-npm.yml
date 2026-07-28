@@ -53,5 +53,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: missu-npm-tarball
+          name: miss-u-more-npm-tarball
           path: npm/*.tgz

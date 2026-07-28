@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { renderStatus, request } from "../lib/missu.js";
+import { renderStatus, request } from "../lib/miss-u-more.js";
 
 test("renderStatus prefers the server's canonical summary", () => {
   const out = renderStatus({ summary: "You and Casey are Connected 💛 — you've sent 7." }, false);

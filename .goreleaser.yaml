@@ -10,16 +10,16 @@
 #   goreleaser release --snapshot --clean
 version: 2
 
-project_name: missu
+project_name: miss-u-more
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: missu
-    main: ./cmd/missu
-    binary: missu
+  - id: miss-u-more
+    main: ./cmd/miss-u-more
+    binary: miss-u-more
     env:
       - CGO_ENABLED=0
     goos: [linux, darwin, windows]
@@ -30,7 +30,7 @@ builds:
       - -s -w -X main.version={{ .Version }}
 
 archives:
-  - id: missu
+  - id: miss-u-more
     formats: [tar.gz]
     format_overrides:
       - goos: windows
@@ -51,8 +51,8 @@ changelog:
 # Homebrew: a Cask (Formulas for pre-compiled binaries are deprecated upstream)
 # in a public tap repo we own. Needs HOMEBREW_TAP_TOKEN — see README.md.
 homebrew_casks:
-  - name: missu
-    binaries: [missu]
+  - name: miss-u-more
+    binaries: [miss-u-more]
     repository:
       owner: glimpsed-io
       name: homebrew-tap
@@ -65,12 +65,12 @@ homebrew_casks:
       post:
         install: |
           if OS.mac?
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/missu"]
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/miss-u-more"]
           end
 
 # Scoop: same idea for Windows, a public bucket repo we own.
 scoops:
-  - name: missu
+  - name: miss-u-more
     repository:
       owner: glimpsed-io
       name: scoop-bucket
@@ -82,7 +82,7 @@ scoops:
 # supported way to tap. Set the package to public once, in GitHub's UI.
 dockers_v2:
   - images:
-      - ghcr.io/glimpsed-io/missu
+      - ghcr.io/glimpsed-io/miss-u-more
     dockerfile: Dockerfile
     platforms: [linux/amd64, linux/arm64]
     tags:

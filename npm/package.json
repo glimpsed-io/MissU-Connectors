@@ -1,5 +1,5 @@
 {
-  "name": "missu",
+  "name": "miss-u-more",
   "version": "0.1.0",
   "description": "Let one person know you miss them, from the command line.",
   "keywords": ["missu", "cli", "miss-u-more"],
@@ -8,7 +8,7 @@
   "author": "Glimpsed",
   "type": "module",
   "bin": {
-    "missu": "bin/missu.js"
+    "miss-u-more": "bin/miss-u-more.js"
   },
   "files": ["bin/", "lib/", "README.md"],
   "engines": {
